@@ -79,13 +79,10 @@ export const getResponse = (response) => {
   return data
 }
 
-export const urlEncode = (arr = []) => {
+export const urlEncode = (obj = {}) => {
   let urlEncoded = "?"
-  for (const item of arr) {
-    if (!item.value) {
-      continue
-    }
-    urlEncoded += `${item.field}=${item.value}&`
+  for (const i in obj) {
+    urlEncoded += `${i}=${obj[i]}&`
   }
   return urlEncoded.substring(0, urlEncoded.length - 1)
 }

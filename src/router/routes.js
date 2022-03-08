@@ -7,19 +7,17 @@ const routes = [{
     }],
   },
   {
-    path: "/home",
+    path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [{
-      path: "",
+      path: "home",
       component: () => import("pages/Index.vue")
-    }],
-  },
-  {
-    path: "/companies",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [{
-      path: "",
+    }, {
+      path: "companies",
       component: () => import("src/pages/company/Company.vue")
+    }, {
+      path: "products",
+      component: () => import("src/pages/product/Product.vue")
     }],
   },
 

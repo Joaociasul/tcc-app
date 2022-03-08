@@ -6,10 +6,10 @@ import {
   api
 } from 'src/boot/axios';
 
-export const ActionGetCompanies = ({}, search_term = '') => {
+export const ActionGetProducts = ({}, search_term = '') => {
   return new Promise(async (resolve, reject) => {
     try {
-      const companies = await api.get('company/paginate' + search_term, getHeaders())
+      const companies = await api.get('product/paginate' + search_term, getHeaders())
       resolve(companies.data)
     } catch (error) {
       const data = getError(error)
@@ -18,21 +18,10 @@ export const ActionGetCompanies = ({}, search_term = '') => {
   })
 }
 
-export const ActionGetDataByCnpj = ({}, payload) => {
-  return new Promise((resolve, reject) => {
-    payload = payload.replace(/[^\d]+/g, '')
-    api.get('getByCnpj/' + payload)
-      .then(resp => {
-        resolve(resp.data)
-      })
-      .catch(e => reject(e))
-  })
-}
-
-export const ActionCreateCompany = ({}, payload) => {
+export const ActionCreateProduct = ({}, payload) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const companies = await api.post('company', payload, getHeaders())
+      const companies = await api.post('product', payload, getHeaders())
       resolve(companies.data)
     } catch (error) {
       const data = getError(error)
@@ -41,9 +30,9 @@ export const ActionCreateCompany = ({}, payload) => {
   })
 }
 
-export const ActionGetCompany = ({}, payload) => {
+export const ActionGetProduct = ({}, payload) => {
   return new Promise(async (resolve, reject) => {
-    await api.get('company/getById/' + payload._id, getHeaders())
+    await api.get('product/getById/' + payload._id, getHeaders())
       .then(async resp => {
         resolve(resp.data)
       })
@@ -51,19 +40,19 @@ export const ActionGetCompany = ({}, payload) => {
   })
 }
 
-export const ActionUpdateCompany = ({}, payload) => {
+export const ActionUpdateProduct = ({}, payload) => {
   return new Promise(async (resolve, reject) => {
     const _id = payload._id
     delete payload._id
-    await api.put('company/' + _id, payload, getHeaders())
+    await api.put('product/' + _id, payload, getHeaders())
       .then(resp => resolve(resp))
       .catch(e => reject(getError(e)))
   })
 }
 
-export const ActionDeleteCompany = ({}, payload) => {
+export const ActionDeleteProduct = ({}, payload) => {
   return new Promise(async (resolve, reject) => {
-    await api.delete('company/' + payload._id, getHeaders())
+    await api.delete('product/' + payload._id, getHeaders())
       .then(() => resolve(true))
       .catch(e => reject(e))
   })

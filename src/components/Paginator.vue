@@ -1,20 +1,20 @@
 <template>
   <div class="flex flex-center">
     <q-pagination
-      v-model="current"
+      v-model="currentPage"
       color="primary"
       :max="Math.ceil(paginator.total / paginator.perPage)"
       :max-pages="4"
       boundary-numbers
       boundary-links
       direction-links
+      @change="change"
     />
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
-
 export default {
   emits: ["onPage"],
   props: {
@@ -23,15 +23,20 @@ export default {
   },
   setup() {
     return {
-      current: ref(1),
+      currentPage: ref(1),
     };
   },
   watch: {
-    current(val) {
+    currentPage(val) {
       this.$emit("onPage", val);
     },
     page(val) {
-      this.current = val;
+      this.currentPage = val;
+    },
+  },
+  methods: {
+    change(val) {
+      console.log(val);
     },
   },
 };

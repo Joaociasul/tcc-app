@@ -109,7 +109,7 @@
 
 <script>
 import Company from "src/models/Company";
-import { mapActions, mapState } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "SaveCompany",
   props: {
@@ -143,7 +143,6 @@ export default {
     getByCnpj() {
       this.ActionGetDataByCnpj(this.form.cnpj)
         .then((resp) => {
-          console.log(resp);
           this.form.corporate_name = resp.nome;
           this.form.fantasy_name = resp.fantasia;
           this.form.email = resp.email;
@@ -184,21 +183,12 @@ export default {
       if (val == true) {
         this.$emit("onForm", { ...this.form });
       }
-      console.log(val);
     },
-    action(val) {
-      console.log(val);
-    },
-    // company_id(val) {
-    //   console.log({ val });
-    // },
   },
   mounted() {
     this.resetForm();
     if (this.action == "update") {
       const company = this.company;
-      // this.form = company.data;
-      console.log(company.data);
       this.form.corporate_name = company.data.corporate_name;
       this.form._id = company.data._id;
       this.form.cnpj = company.data.cnpj;

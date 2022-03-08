@@ -6,6 +6,10 @@ import {
 } from "vuex";
 import auth from "./auth";
 import companies from "./companies";
+
+import products from "./product";
+
+/**ORM */
 import VuexORM from '@vuex-orm/core'
 import Company from '../models/Company.js'
 
@@ -16,9 +20,12 @@ export default store(( /* { ssrContext } */ ) => {
   const Store = createStore({
     modules: {
       auth: auth,
-      companies: companies
+      companies,
+      products
     },
-    plugins: [VuexORM.install(database)],
+    plugins: [VuexORM.install(database, {
+      readonly: false
+    })],
     strict: process.env.DEBUGGING,
   });
   return Store;

@@ -11,7 +11,11 @@
       @onDelete="onDelete"
       @onEdit="onEdit"
     />
-    <Paginator :paginator="paginator" @onPage="changePage" :page="page" />
+    <Paginator
+      :paginator="paginator"
+      @onPage="changePage"
+      v-model:page="page"
+    />
     <Modal
       v-model:openModal="modalOpen"
       @onOk="onOkModal"
@@ -60,41 +64,53 @@ export default {
       page: 1,
       company_id: null,
       filters: {},
+      filterString: "",
       columns: [
         {
-          label: "Rasão Social",
-          field: "corporate_name",
+          label: "Produto",
+          field: "name",
           width: "200",
         },
         {
-          label: "Nome Fantasia",
-          field: "fantasy_name",
-          width: "150",
+          label: "Código de barras",
+          field: "ean_cod",
+          width: "40",
         },
+
         {
-          label: "CNPJ",
-          field: "cnpj",
+          label: "Código",
+          field: "cod",
           width: "50",
         },
         {
-          label: "Telefone",
-          field: "phone_number",
+          label: "Valor pago",
+          field: "unitary_value",
+          width: "100",
+        },
+        {
+          label: "Quantidade",
+          field: "quantity",
+          width: "100",
+        },
+        {
+          label: "Total",
+          field: "total_amount",
           width: "100",
         },
       ],
       rows: [],
       filterOptions: [
         {
-          label: "Rasão Social",
-          value: "corporate_name",
+          label: "Nome do produto",
+          value: "name",
         },
         {
-          label: "Nome Fantasia",
-          value: "fantasy_name",
+          label: "Código",
+          value: "cod",
         },
         {
-          label: "CNPJ",
-          value: "cnpj",
+          label: "Código de barras",
+          value: "ean_cod",
         },
       ],
       modalOpen: false,
@@ -105,14 +121,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("companies", [
-      "ActionGetCompanies",
-      "ActionCreateCompany",
-      "ActionGetCompany",
-      "ActionSetCompany",
-      "ActionUpdateCompany",
-      "ActionDeleteCompany",
-    ]),
+    ...mapActions("products", ["ActionGetProducts"]),
     async onRequest() {
       if (this.tokenExpired) {
         setTimeout(async () => {
@@ -120,8 +129,19 @@ export default {
         }, 10);
       } else {
         this.$q.loading.hide();
-        let data = await this.ActionGetCompanies(urlEncode(this.filters));
-        this.rows = data.data;
+        let data = await this.ActionGetProducts(urlEncode(this.filters));
+        this.rows = [];
+        data.data.map((el) => {
+          el.total_amount = new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          }).format(el.total_amount);
+          el.unitary_value = new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          }).format(el.unitary_value);
+          this.rows.push(el);
+        });
         this.paginator = data.paginator;
         this.$q.loading.hide();
       }
