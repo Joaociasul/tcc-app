@@ -7,18 +7,18 @@
           dense
           round
           icon="menu"
+          title="Menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
         <q-toolbar-title> Table Parts </q-toolbar-title>
-        <div @click="logout()" style="cursor: pointer" class="q-btn">
-          <span clickable style="font-size: 25px" class="material-icons"
+        <q-btn flat round @click="logout()" title="Sair" class="q-btn">
+          <span clickable style="font-size: 23px" class="material-icons"
             >logout</span
           >
-        </div>
+        </q-btn>
       </q-toolbar>
     </q-header>
-
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
         <q-item-label style="font-weight: 600" header>
@@ -56,46 +56,11 @@ const linksList = [
     permissions: ["root"],
   },
   {
-    title: "Github",
-    caption: "github.com/quasarframework",
-    icon: "code",
-    link: "#/teste",
-    permissions: ["root", "administrator", "user"],
-  },
-  {
-    title: "Discord Chat Channel",
-    caption: "chat.quasar.dev",
-    icon: "chat",
-    link: "#",
-    permissions: ["root", "administrator", "user"],
-  },
-  {
-    title: "Forum",
-    caption: "forum.quasar.dev",
-    icon: "record_voice_over",
-    link: "#",
-    permissions: ["root", "administrator", "user"],
-  },
-  {
-    title: "Twitter",
-    caption: "@quasarframework",
-    icon: "rss_feed",
-    link: "#",
-    permissions: ["root", "administrator", "user"],
-  },
-  {
-    title: "Facebook",
-    caption: "@QuasarFramework",
-    icon: "public",
-    link: "#",
-    permissions: ["root", "administrator", "user"],
-  },
-  {
-    title: "Quasar Awesome",
-    caption: "Community Quasar projects",
-    icon: "favorite",
-    link: "#",
-    permissions: ["root", "administrator", "user"],
+    title: "Empresas",
+    caption: "Cadastro e listagem",
+    icon: "business",
+    link: "#/companies",
+    permissions: ["root"],
   },
 ];
 
@@ -104,12 +69,11 @@ import { mapActions, mapGetters } from "vuex";
 
 export default defineComponent({
   name: "MainLayout",
-
   components: {
     EssentialLink,
   },
   methods: {
-    ...mapActions("auth", ["ActionLogout"]),
+    ...mapActions("auth", ["ActionLogout", "ActionRefreshToken"]),
     checkPermission(arr) {
       let items = null;
       for (const item of arr) {
@@ -126,7 +90,7 @@ export default defineComponent({
         },
       });
       this.$socket.on("hello", (e) => {
-        console.log(e); // x8WIv7-mJelg7on_ALbx
+        console.log(e);
       });
     },
     logout() {
@@ -134,7 +98,25 @@ export default defineComponent({
       this.ActionLogout();
     },
   },
-  mounted() {
+  created() {
+    if (this.tokenExpired) {
+      const payload = {
+        refresh_token: this.getRefreshToken,
+      };
+      setTimeout(async () => {
+        await this.ActionRefreshToken(payload).catch((e) => {
+          this.$q
+            .dialog({
+              title: "Autenticação necessária!",
+              message: "Você foi desconectado, faça login novamente!",
+              persistent: true,
+            })
+            .onOk(() => {
+              this.logout();
+            });
+        });
+      }, 200);
+    }
     this.socketConnect(this.getToken);
   },
   setup() {
@@ -148,7 +130,12 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapGetters("auth", ["getDataUser", "getToken"]),
+    ...mapGetters("auth", [
+      "getDataUser",
+      "getToken",
+      "tokenExpired",
+      "getRefreshToken",
+    ]),
     getFantasyName() {
       return this.getDataUser?.company?.fantasy_name ?? "Administrador";
     },

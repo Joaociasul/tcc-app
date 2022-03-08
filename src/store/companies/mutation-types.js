@@ -1,0 +1,1 @@
+export const SET_COMPANY = "COMPANY/SET_COMPANY"

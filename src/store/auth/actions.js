@@ -6,6 +6,10 @@ import {
 import {
   api
 } from "src/boot/axios"
+import {
+  getError,
+  getResponse
+} from "src/services/utils"
 import * as types from "./mutation-types"
 export const ActionSetToken = ({
   commit
@@ -19,24 +23,15 @@ export const ActionLogin = async ({
   return new Promise(async (resolve, reject) => {
     try {
       const response = await api.post('user/login', payload)
-      const data = response.data
-      if (!data) {
-        return reject({
-          error: "data is null"
-        })
-      }
+      const data = getResponse(response)
       await dispatch('ActionSetToken', data._token)
       await dispatch('AcionSetExpToken', data._exp_token)
       await dispatch('ActionSetRefreshToken', data.refresh_token)
       await dispatch('ActionSetDataUser', data)
       return resolve(data)
     } catch (error) {
-      const {
-        response
-      } = error
-      const {
-        data
-      } = response
+      console.log(error)
+      const data = getError(error)
       reject(data)
     }
   })
@@ -76,7 +71,7 @@ export const ActionRefreshToken = ({
   return new Promise(async (resolve, reject) => {
     try {
       const payload = {
-        refresh_token: getters.getRefreshToken
+        refresh_token: await getters.getRefreshToken
       }
       const response = await api.post('user/refresh-token', payload)
       const data = response.data
@@ -91,18 +86,11 @@ export const ActionRefreshToken = ({
       await dispatch('ActionSetDataUser', data)
       return resolve(data)
     } catch (error) {
-      const {
-        response
-      } = error
-      const {
-        data
-      } = response
-      reject(data)
+      return reject(getError(error))
     }
   })
 }
 export const ActionLogout = () => {
-  console.log('logout')
   SessionStorage.clear()
   Cookies.remove('refresh_token')
   LocalStorage.clear()

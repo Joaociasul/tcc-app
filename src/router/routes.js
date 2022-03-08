@@ -15,11 +15,11 @@ const routes = [{
     }],
   },
   {
-    path: "/teste",
+    path: "/companies",
     component: () => import("layouts/MainLayout.vue"),
     children: [{
       path: "",
-      component: () => import("pages/Index.vue")
+      component: () => import("src/pages/company/Company.vue")
     }],
   },
 

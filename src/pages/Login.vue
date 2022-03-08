@@ -72,6 +72,7 @@ export default {
           this.$router.push("/home");
         })
         .catch(({ error }) => {
+          this.$q.loading.hide();
           if (error.validator) {
             error.validator.auth == false && messageError("auth");
           }
