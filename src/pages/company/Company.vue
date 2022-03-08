@@ -11,7 +11,7 @@
       @onDelete="onDelete"
       @onEdit="onEdit"
     />
-    <Paginator :paginator="paginator" @onPage="changePage" />
+    <Paginator :paginator="paginator" @onPage="changePage" :page="page" />
     <Modal
       v-model:openModal="modalOpen"
       @onOk="onOkModal"
@@ -34,7 +34,12 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import Table from "components/Table.vue";
 import Filter from "components/Filter.vue";
-import { messageErrorValidator, urlEncode } from "src/services/utils";
+import {
+  messageConfirm,
+  messageErrorValidator,
+  messagesSuccess,
+  urlEncode,
+} from "src/services/utils";
 import Modal from "components/Modal.vue";
 import SaveCompany from "components/company/SaveCompany.vue";
 import Paginator from "components/Paginator.vue";
@@ -52,23 +57,29 @@ export default {
   },
   data() {
     return {
+      page: 1,
       company_id: null,
+      filters: "",
       columns: [
         {
           label: "Rasão Social",
           field: "corporate_name",
+          width: "200",
         },
         {
           label: "Nome Fantasia",
           field: "fantasy_name",
+          width: "150",
         },
         {
           label: "CNPJ",
           field: "cnpj",
+          width: "50",
         },
         {
           label: "Telefone",
           field: "phone_number",
+          width: "100",
         },
       ],
       rows: [],
@@ -99,14 +110,17 @@ export default {
       "ActionCreateCompany",
       "ActionGetCompany",
       "ActionSetCompany",
+      "ActionUpdateCompany",
+      "ActionDeleteCompany",
     ]),
-    async onRequest(search_terms = "") {
+    async onRequest() {
       if (this.tokenExpired) {
         setTimeout(async () => {
-          return await this.onRequest(search_terms);
+          return await this.onRequest(this.filters);
         }, 10);
       } else {
-        let data = await this.ActionGetCompanies(search_terms);
+        this.$q.loading.hide();
+        let data = await this.ActionGetCompanies(this.filters);
         this.rows = data.data;
         this.paginator = data.paginator;
         this.$q.loading.hide();
@@ -114,7 +128,8 @@ export default {
     },
     sendFilter(filter) {
       this.$q.loading.show();
-      this.onRequest(urlEncode(filter));
+      this.filters = urlEncode(filter);
+      this.onRequest();
     },
     openModal() {
       this.titleModal = "Nova Empresa";
@@ -138,7 +153,20 @@ export default {
       }, 1);
     },
     onDelete(element) {
-      console.log(element);
+      messageConfirm(
+        "Deseja excluir a empresa " + element.corporate_name + "?"
+      ).onOk(async () => {
+        this.ActionDeleteCompany(element)
+          .then(() => {
+            messagesSuccess("deleteCompanySuccess");
+            return this.onRequest();
+          })
+          .catch((e) => {
+            console.log(e);
+            messageError("deleteCompanyError");
+            return this.onRequest();
+          });
+      });
     },
     async onEdit(element) {
       this.titleModal = "Editar Empresa";
@@ -157,10 +185,11 @@ export default {
       this.$q.loading.show();
       if (this.actionForm === "create") {
         try {
-          const resp = await this.ActionCreateCompany(payload);
+          await this.ActionCreateCompany(payload);
           this.modalOpen = false;
           this.$q.loading.hide();
-          return this.rows.push(resp);
+          messagesSuccess("createCompanySuccess");
+          return this.onRequest();
         } catch (e) {
           if (e?.error?.validator) {
             messageErrorValidator(getMessage(e.error.validator));
@@ -168,14 +197,26 @@ export default {
           }
         }
       }
+      try {
+        await this.ActionUpdateCompany(payload);
+        this.modalOpen = false;
+        this.$q.loading.hide();
+        messagesSuccess("updateCompanySuccess");
+        return this.onRequest();
+      } catch (e) {
+        if (e?.error?.validator) {
+          messageErrorValidator(getMessage(e.error.validator));
+          this.$q.loading.hide();
+        }
+      }
     },
     changePage(val) {
       const filter = [{ field: "page", value: val }];
-      this.onRequest(urlEncode(filter));
+      this.filters = urlEncode(filter);
+      this.onRequest();
     },
   },
   mounted() {
-    this.$q.loading.show();
     this.onRequest();
   },
   computed: {

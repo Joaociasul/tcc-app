@@ -19,6 +19,7 @@ export default {
   emits: ["onPage"],
   props: {
     paginator: { type: Object, required: true },
+    page: { type: Number, default: 1 },
   },
   setup() {
     return {
@@ -28,6 +29,9 @@ export default {
   watch: {
     current(val) {
       this.$emit("onPage", val);
+    },
+    page(val) {
+      this.current = val;
     },
   },
 };

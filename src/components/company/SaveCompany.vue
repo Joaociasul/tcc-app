@@ -1,82 +1,108 @@
 <template>
   <div>
-    <q-form class="q-gutter-md flex">
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.cnpj"
-        mask="##.###.###/####-##"
-        @blur="getByCnpj()"
-        label="CNPJ"
-      />
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.corporate_name"
-        label="Rasão social"
-      />
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.email"
-        label="Email"
-      />
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.fantasy_name"
-        label="Nome Fantasia"
-      />
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.phone_number"
-        mask="(##) # ####-####"
-        label="Telefone"
-      />
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.address.postal_code"
-        mask="##.###-###"
-        label="Cep"
-      />
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.address.number"
-        label="Número"
-      />
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.address.street"
-        label="Logradouro"
-      />
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.address.district"
-        label="Bairro"
-      />
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.address.complement"
-        label="Complemento"
-      />
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.address.city"
-        label="Cidade"
-      />
-      <q-input
-        class="j-input"
-        autocomplete="nope"
-        v-model="form.address.uf"
-        label="Estado"
-      />
+    <q-form>
+      <div class="row">
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.cnpj"
+            mask="##.###.###/####-##"
+            @blur="getByCnpj()"
+            label="CNPJ"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.corporate_name"
+            label="Rasão social"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.email"
+            label="Email"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.fantasy_name"
+            label="Nome Fantasia"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.phone_number"
+            mask="(##) # ####-####"
+            label="Telefone"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.address.postal_code"
+            mask="##.###-###"
+            label="Cep"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.address.number"
+            label="Número"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.address.street"
+            label="Logradouro"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.address.district"
+            label="Bairro"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.address.complement"
+            label="Complemento"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.address.city"
+            label="Cidade"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+          <q-input
+            class="j-input full-width"
+            autocomplete="nope"
+            v-model="form.address.uf"
+            label="Estado"
+          />
+        </div>
+      </div>
     </q-form>
   </div>
 </template>
@@ -157,7 +183,6 @@ export default {
     emitChilds(val) {
       if (val == true) {
         this.$emit("onForm", { ...this.form });
-        this.resetForm();
       }
       console.log(val);
     },
@@ -200,7 +225,7 @@ export default {
 
 <style scoped>
 .j-input {
-  width: 30%;
-  margin: 20px;
+  /* width: 30%; */
+  margin: 0 0 20px 0;
 }
 </style>

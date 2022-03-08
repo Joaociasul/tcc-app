@@ -56,11 +56,11 @@ const linksList = [
     permissions: ["root"],
   },
   {
-    title: "Empresas",
-    caption: "Cadastro e listagem",
+    title: "Produtos",
+    caption: "Upload de arquvos",
     icon: "business",
-    link: "#/companies",
-    permissions: ["root"],
+    link: "#/products",
+    permissions: ["root", "administrator", "user"],
   },
 ];
 

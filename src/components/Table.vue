@@ -17,37 +17,45 @@
             v-for="(item, key) in columns"
             :key="key"
             class="text-left"
+            :width="item.width"
           >
             {{ item.label }}
           </th>
-          <th style="font-size: 14px; min-width: 103px" width="103">Ações</th>
+          <th
+            style="font-size: 14px; min-width: 70px; max-width: 70px"
+            width="100"
+          >
+            Ações
+          </th>
         </tr>
       </thead>
       <tbody style="overflow: scroll">
         <tr v-for="(i, key) in rows" :key="key">
           <td
-            style="font-size: 14px"
+            style="font-size: 14px; white-space: pre-wrap"
             v-for="(j, k) in columns"
             :key="k"
             class="text-rigth"
           >
             {{ i[j.field] }}
           </td>
-          <td class="flex no-wrap justify-between">
-            <q-btn
-              @click="onEdit(i)"
-              padding="xs"
-              round
-              color="info"
-              icon="edit"
-            />
-            <q-btn
-              @click="onDelete(i)"
-              padding="xs"
-              round
-              color="negative"
-              icon="delete"
-            />
+          <td style="min-width: 115px; max-width: 115px !important">
+            <q-card-actions align="center" class="no-wrap">
+              <q-btn
+                @click="onEdit(i)"
+                padding="xs"
+                round
+                color="info"
+                icon="edit"
+              />
+              <q-btn
+                @click="onDelete(i)"
+                padding="xs"
+                round
+                color="negative"
+                icon="delete"
+              />
+            </q-card-actions>
           </td>
         </tr>
       </tbody>

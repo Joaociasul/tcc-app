@@ -6,9 +6,6 @@ import {
   api
 } from 'src/boot/axios';
 
-import * as types from './mutation-types'
-import Company from "src/models/Company";
-
 export const ActionGetCompanies = ({}, search_term = '') => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -45,26 +42,31 @@ export const ActionCreateCompany = ({}, payload) => {
   })
 }
 
-export const ActionSetCompany = ({
-
-}, payload) => {
-  Company.create({
-    data: {
-      data: payload
-    }
-  })
-}
-
-export const ActionGetCompany = ({
-  dispatch
-}, payload) => {
+export const ActionGetCompany = ({}, payload) => {
   return new Promise(async (resolve, reject) => {
     console.log(payload)
     await api.get('company/getById/' + payload._id, getHeaders())
       .then(async resp => {
-        // await dispatch('ActionSetCompany', resp.data)
         resolve(resp.data)
       })
       .catch(err => reject(getError(err)))
+  })
+}
+
+export const ActionUpdateCompany = ({}, payload) => {
+  return new Promise(async (resolve, reject) => {
+    const _id = payload._id
+    delete payload._id
+    await api.put('company/' + _id, payload, getHeaders())
+      .then(resp => resolve(resp))
+      .catch(e => reject(getError(e)))
+  })
+}
+
+export const ActionDeleteCompany = ({}, payload) => {
+  return new Promise(async (resolve, reject) => {
+    await api.delete('company/' + payload._id, getHeaders())
+      .then(() => resolve(true))
+      .catch(e => reject(e))
   })
 }
