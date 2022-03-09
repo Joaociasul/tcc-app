@@ -3,19 +3,16 @@
     <Filter
       @filter="sendFilter"
       :fieldOptions="filterOptions"
-      @openModalAdd="openModal"
+      :showBtnAdd="false"
     />
     <Table
       :columns="columns"
       :rows="rows"
-      @onDelete="onDelete"
-      @onEdit="onEdit"
+      :showActions="false"
+      @onRowDblClick="openProduct"
+      @onRowClick="rowClick"
     />
-    <Paginator
-      :paginator="paginator"
-      @onPage="changePage"
-      v-model:page="page"
-    />
+    <Paginator :paginator="paginator" @onPage="changePage" />
     <Modal
       v-model:openModal="modalOpen"
       @onOk="onOkModal"
@@ -35,21 +32,13 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import Table from "components/Table.vue";
 import Filter from "components/Filter.vue";
-import {
-  messageConfirm,
-  messageErrorValidator,
-  messagesSuccess,
-  urlEncode,
-} from "src/services/utils";
+import { urlEncode } from "src/services/utils";
 import Modal from "components/Modal.vue";
 import SaveCompany from "components/company/SaveCompany.vue";
 import Paginator from "components/Paginator.vue";
-import Company from "src/models/Company";
-import { messageError } from "../../services/utils";
-import { getMessage } from "../../services/messages/company";
 
 export default {
   components: {
@@ -61,7 +50,6 @@ export default {
   },
   data() {
     return {
-      page: 1,
       company_id: null,
       filters: {},
       filterString: "",
@@ -83,7 +71,7 @@ export default {
           width: "50",
         },
         {
-          label: "Valor pago",
+          label: "Valor unitário",
           field: "unitary_value",
           width: "100",
         },
@@ -122,6 +110,7 @@ export default {
   },
   methods: {
     ...mapActions("products", ["ActionGetProducts"]),
+    ...mapActions("paginator", ["ActionSetPage"]),
     async onRequest() {
       if (this.tokenExpired) {
         setTimeout(async () => {
@@ -147,16 +136,14 @@ export default {
       }
     },
     sendFilter(filter) {
-      if (!filter.length) {
-        for (const i in this.filters) {
-          delete this.filters[i];
-        }
+      for (const i in this.filters) {
+        delete this.filters[i];
       }
       filter.map((el) => {
         this.filters[el.field] = el.value;
       });
       this.filters["page"] = 1;
-      this.page = 1;
+      this.ActionSetPage(1);
       this.onRequest();
     },
     openModal() {
@@ -180,67 +167,25 @@ export default {
         this.modalOpen = false;
       }, 1);
     },
-    onDelete(element) {
-      messageConfirm(
-        "Deseja excluir a empresa " + element.corporate_name + "?"
-      ).onOk(async () => {
-        this.ActionDeleteCompany(element)
-          .then(() => {
-            messagesSuccess("deleteCompanySuccess");
-            return this.onRequest();
-          })
-          .catch((e) => {
-            console.log(e);
-            messageError("deleteCompanyError");
-            return this.onRequest();
-          });
-      });
-    },
-    async onEdit(element) {
-      this.titleModal = "Editar Empresa";
-      this.actionForm = "update";
-      this.modalOpen = false;
-      const data = await this.ActionGetCompany(element);
-      Company.create({ data: { data } });
-      setTimeout(() => {
-        this.modalOpen = true;
-      }, 1);
-    },
     changeForm(data) {
       this.updateOrCreateCompany(data);
-    },
-    async updateOrCreateCompany(payload) {
-      this.$q.loading.show();
-      if (this.actionForm === "create") {
-        try {
-          await this.ActionCreateCompany(payload);
-          this.modalOpen = false;
-          this.$q.loading.hide();
-          messagesSuccess("createCompanySuccess");
-          return this.onRequest();
-        } catch (e) {
-          if (e?.error?.validator) {
-            messageErrorValidator(getMessage(e.error.validator));
-            this.$q.loading.hide();
-          }
-        }
-      }
-      try {
-        await this.ActionUpdateCompany(payload);
-        this.modalOpen = false;
-        this.$q.loading.hide();
-        messagesSuccess("updateCompanySuccess");
-        return this.onRequest();
-      } catch (e) {
-        if (e?.error?.validator) {
-          messageErrorValidator(getMessage(e.error.validator));
-          this.$q.loading.hide();
-        }
-      }
     },
     changePage(val) {
       this.filters["page"] = val;
       this.onRequest();
+    },
+    rowClick(i) {
+      let showed = this.$q.sessionStorage.getItem("showedMessageInfoRowClick");
+      if (!showed) {
+        this.$q.notify({
+          message: "Clique duas vezes para abrir.",
+          icon: "announcement",
+        });
+      }
+      this.$q.sessionStorage.set("showedMessageInfoRowClick", true);
+    },
+    openProduct(i) {
+      console.log(i);
     },
   },
   mounted() {

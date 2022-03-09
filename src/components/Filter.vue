@@ -60,6 +60,7 @@
       </q-menu>
     </q-btn>
     <q-btn
+      v-if="showBtnAdd"
       round
       @click="$emit('openModalAdd', true)"
       class="q-mt-sm q-ml-sm"
@@ -74,6 +75,7 @@ export default {
   emits: ["filter", "openModalAdd"],
   props: {
     fieldOptions: { type: Array, required: true },
+    showBtnAdd: { type: Boolean, default: true },
   },
   data() {
     return {

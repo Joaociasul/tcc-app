@@ -10,6 +10,7 @@
       :rows="rows"
       @onDelete="onDelete"
       @onEdit="onEdit"
+      :showActions="true"
     />
     <Paginator :paginator="paginator" @onPage="changePage" :page="page" />
     <Modal

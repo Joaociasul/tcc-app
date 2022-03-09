@@ -3,23 +3,24 @@
     <q-pagination
       v-model="currentPage"
       color="primary"
-      :max="Math.ceil(paginator.total / paginator.perPage)"
+      :max="paginator.pageCount"
       :max-pages="4"
       boundary-numbers
       boundary-links
       direction-links
-      @change="change"
     />
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
+import { mapActions, mapState } from "vuex";
+import product from "src/store/product";
+import * as types from "../store/paginator/mutation-types";
 export default {
   emits: ["onPage"],
   props: {
     paginator: { type: Object, required: true },
-    page: { type: Number, default: 1 },
   },
   setup() {
     return {
@@ -29,15 +30,17 @@ export default {
   watch: {
     currentPage(val) {
       this.$emit("onPage", val);
+      this.ActionSetPage(val);
     },
     page(val) {
       this.currentPage = val;
     },
   },
   methods: {
-    change(val) {
-      console.log(val);
-    },
+    ...mapActions("paginator", ["ActionSetPage"]),
+  },
+  computed: {
+    ...mapState("paginator", ["page"]),
   },
 };
 </script>

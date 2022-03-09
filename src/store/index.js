@@ -8,6 +8,7 @@ import auth from "./auth";
 import companies from "./companies";
 
 import products from "./product";
+import paginator from "./paginator";
 
 /**ORM */
 import VuexORM from '@vuex-orm/core'
@@ -21,12 +22,13 @@ export default store(( /* { ssrContext } */ ) => {
     modules: {
       auth: auth,
       companies,
-      products
+      products,
+      paginator
     },
     plugins: [VuexORM.install(database, {
       readonly: false
     })],
-    strict: process.env.DEBUGGING,
+    strict: false,
   });
   return Store;
 });

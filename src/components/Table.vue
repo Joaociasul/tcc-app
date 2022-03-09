@@ -22,6 +22,7 @@
             {{ item.label }}
           </th>
           <th
+            v-if="showActions"
             style="font-size: 14px; min-width: 70px; max-width: 70px"
             width="100"
           >
@@ -30,7 +31,12 @@
         </tr>
       </thead>
       <tbody style="overflow: scroll">
-        <tr v-for="(i, key) in rows" :key="key">
+        <tr
+          @click="rowClick(i)"
+          @dblclick="rowDblClick(i)"
+          v-for="(i, key) in rows"
+          :key="key"
+        >
           <td
             style="font-size: 14px; white-space: pre-wrap"
             v-for="(j, k) in columns"
@@ -39,7 +45,10 @@
           >
             {{ i[j.field] }}
           </td>
-          <td style="min-width: 115px; max-width: 115px !important">
+          <td
+            v-if="showActions"
+            style="min-width: 115px; max-width: 115px !important"
+          >
             <q-card-actions align="center" class="no-wrap">
               <q-btn
                 @click="onEdit(i)"
@@ -65,11 +74,12 @@
 <script>
 import { ref } from "vue";
 export default {
-  emits: ["onEdit", "onDelete"],
+  emits: ["onEdit", "onDelete", "onRowClick", "onRowDblClick"],
   components: {},
   props: {
     columns: { type: Array, required: true },
     rows: { type: Array, required: true },
+    showActions: { type: Boolean, default: true },
   },
   setup() {
     return {
@@ -88,6 +98,12 @@ export default {
     },
     onDelete(element) {
       this.$emit("onDelete", Object.assign({}, element));
+    },
+    rowClick(element) {
+      this.$emit("onRowClick", Object.assign({}, element));
+    },
+    rowDblClick(element) {
+      this.$emit("onRowDblClick", Object.assign({}, element));
     },
   },
 };

@@ -58,7 +58,7 @@ const linksList = [
   {
     title: "Produtos",
     caption: "Upload de arquvos",
-    icon: "business",
+    icon: "qr_code_2",
     link: "#/products",
     permissions: ["root", "administrator", "user"],
   },
