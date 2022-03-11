@@ -1,3 +1,3 @@
 export default {
-  company: null
+  product: null
 }

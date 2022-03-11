@@ -3,7 +3,7 @@
     <q-pagination
       v-model="currentPage"
       color="primary"
-      :max="paginator.pageCount"
+      :max="Math.ceil(paginator.total / paginator.perPage)"
       :max-pages="4"
       boundary-numbers
       boundary-links
@@ -15,8 +15,6 @@
 <script>
 import { ref } from "vue";
 import { mapActions, mapState } from "vuex";
-import product from "src/store/product";
-import * as types from "../store/paginator/mutation-types";
 export default {
   emits: ["onPage"],
   props: {

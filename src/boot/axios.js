@@ -5,10 +5,13 @@ import axios from "axios";
 import {
   io
 } from "socket.io-client";
+const url_api = process.env.API_URL
 const api = axios.create({
-  baseURL: process.env.API_URL
+  baseURL: url_api
 });
 const socket = null;
+
+
 
 export default boot(({
   app
@@ -17,11 +20,12 @@ export default boot(({
   app.config.globalProperties.$api = api;
   app.config.globalProperties.$io = io;
   app.config.globalProperties.$socket = socket;
-
+  app.config.globalProperties.$url_api = url_api;
 });
 
 export {
   api,
   io,
   socket,
+  url_api
 };

@@ -1,1 +1,1 @@
-export const SET_COMPANY = "COMPANY/SET_COMPANY"
+export const SET_PRODUCT = "PRODUCT/SET_PRODUCT"

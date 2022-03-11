@@ -3,7 +3,11 @@
     <Filter
       @filter="sendFilter"
       :fieldOptions="filterOptions"
-      :showBtnAdd="false"
+      :showBtnAdd="true"
+      @openModalAdd="openModalAdd"
+      labelSearch="Pesquisa por cód.barras"
+      title="Produtos"
+      @onSearch="search"
     />
     <Table
       :columns="columns"
@@ -18,9 +22,12 @@
       @onOk="onOkModal"
       @onCancel="onCancelModal"
       :title="titleModal"
+      v-model:fullWidth="fullWidth"
+      :showBtnCancel="false"
+      :labelBtnOk="'Ok'"
     >
       <template v-slot:content>
-        <SaveCompany
+        <SaveProduct
           @onForm="changeForm"
           v-model:emitChilds="emitChilds"
           v-model:action="actionForm"
@@ -37,20 +44,22 @@ import Table from "components/Table.vue";
 import Filter from "components/Filter.vue";
 import { urlEncode } from "src/services/utils";
 import Modal from "components/Modal.vue";
-import SaveCompany from "components/company/SaveCompany.vue";
+import SaveProduct from "components/product/SaveProduct.vue";
 import Paginator from "components/Paginator.vue";
+import { date } from "quasar";
 
 export default {
   components: {
     Table,
     Filter,
     Modal,
-    SaveCompany,
     Paginator,
+    SaveProduct,
   },
   data() {
     return {
       company_id: null,
+      fullWidth: false,
       filters: {},
       filterString: "",
       columns: [
@@ -85,6 +94,11 @@ export default {
           field: "total_amount",
           width: "100",
         },
+        {
+          label: "Comprado em",
+          field: "purchase_date",
+          width: "100",
+        },
       ],
       rows: [],
       filterOptions: [
@@ -109,7 +123,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("products", ["ActionGetProducts"]),
+    ...mapActions("products", ["ActionGetProducts", "ActionGetProduct"]),
     ...mapActions("paginator", ["ActionSetPage"]),
     async onRequest() {
       if (this.tokenExpired) {
@@ -129,6 +143,10 @@ export default {
             style: "currency",
             currency: "BRL",
           }).format(el.unitary_value);
+          el.purchase_date = date.formatDate(
+            el.purchase_date,
+            "DD/MM/YYYY HH:mm"
+          );
           this.rows.push(el);
         });
         this.paginator = data.paginator;
@@ -146,8 +164,9 @@ export default {
       this.ActionSetPage(1);
       this.onRequest();
     },
-    openModal() {
-      this.titleModal = "Nova Empresa";
+    openModalAdd() {
+      this.fullWidth = false;
+      this.titleModal = "Upload de XML";
       this.actionForm = "create";
       this.modalOpen = false;
       setTimeout(() => {
@@ -156,9 +175,8 @@ export default {
     },
     onOkModal() {
       this.modalOpen = true;
-      this.emitChilds = false;
       setTimeout(() => {
-        this.emitChilds = true;
+        this.modalOpen = false;
       }, 1);
     },
     onCancelModal() {
@@ -184,8 +202,19 @@ export default {
       }
       this.$q.sessionStorage.set("showedMessageInfoRowClick", true);
     },
-    openProduct(i) {
-      console.log(i);
+    openProduct(element) {
+      this.fullWidth = true;
+      this.ActionGetProduct(element);
+      this.titleModal = "Visualizar Produto";
+      this.actionForm = "view";
+      this.modalOpen = false;
+      setTimeout(() => {
+        this.modalOpen = true;
+      }, 1);
+    },
+    search(search_term) {
+      this.filters["ean_cod"] = search_term;
+      return this.onRequest();
     },
   },
   mounted() {

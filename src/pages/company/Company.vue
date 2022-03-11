@@ -4,6 +4,9 @@
       @filter="sendFilter"
       :fieldOptions="filterOptions"
       @openModalAdd="openModal"
+      labelSearch="Pesquisa por nome"
+      title="Empresas"
+      @onSearch="search"
     />
     <Table
       :columns="columns"
@@ -222,6 +225,10 @@ export default {
     changePage(val) {
       this.filters["page"] = val;
       this.onRequest();
+    },
+    search(search_term) {
+      this.filters["corporate_name"] = search_term;
+      return this.onRequest();
     },
   },
   mounted() {
