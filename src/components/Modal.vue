@@ -1,22 +1,24 @@
 <template>
   <q-dialog v-model="fullModal" persistent :full-width="fullWidth">
     <q-card>
-      <q-card-section>
-        <div class="text-h6">{{ title }}</div>
-      </q-card-section>
-      <q-card-section class="q-pt-none">
-        <slot name="content"></slot>
-      </q-card-section>
-      <q-card-actions align="right" class="bg-white">
-        <q-btn
-          v-if="showBtnCancel"
-          color="negative"
-          @click="cancel()"
-          label="Cancelar"
-          class="q-mr-sm"
-        />
-        <q-btn color="positive" @click="ok()" :label="labelBtnOk" />
-      </q-card-actions>
+      <q-form @submit="ok">
+        <q-card-section>
+          <div class="text-h6">{{ title }}</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <slot name="content"></slot>
+        </q-card-section>
+        <q-card-actions align="right" class="bg-white">
+          <q-btn
+            v-if="showBtnCancel"
+            color="negative"
+            @click="cancel()"
+            label="Cancelar"
+            class="q-mr-sm"
+          />
+          <q-btn color="positive" type="submit" :label="labelBtnOk" />
+        </q-card-actions>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>

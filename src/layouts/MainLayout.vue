@@ -11,7 +11,7 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-        <q-toolbar-title> Table Parts </q-toolbar-title>
+        <q-toolbar-title> P-WEB </q-toolbar-title>
         <q-btn flat round @click="logout()" title="Sair" class="q-btn">
           <span clickable style="font-size: 23px" class="material-icons"
             >logout</span
@@ -50,10 +50,17 @@ const linksList = [
   },
   {
     title: "Empresas",
-    caption: "Cadastro e listagem",
+    caption: "Empresas parceiras",
     icon: "business",
     link: "#/companies",
     permissions: ["root"],
+  },
+  {
+    title: "Usuários",
+    caption: "Usuários do sistema",
+    icon: "people",
+    link: "#/users",
+    permissions: ["root", "administrator"],
   },
   {
     title: "Produtos",

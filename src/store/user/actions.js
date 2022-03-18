@@ -6,11 +6,11 @@ import {
   api
 } from 'src/boot/axios';
 
-export const ActionGetCompanies = ({}, search_term = '') => {
+export const ActionGetUsers = ({}, search_term = '') => {
   return new Promise(async (resolve, reject) => {
     try {
-      const companies = await api.get('company/paginate' + search_term, getHeaders())
-      resolve(companies.data)
+      const users = await api.get('user' + search_term, getHeaders())
+      resolve(users.data)
     } catch (error) {
       const data = getError(error)
       reject(data)
@@ -21,9 +21,6 @@ export const ActionGetCompanies = ({}, search_term = '') => {
 export const ActionGetDataByCnpj = ({}, payload) => {
   return new Promise((resolve, reject) => {
     payload = payload.replace(/[^\d]+/g, '')
-    if (payload.length < 14) {
-      return reject(new Error('Informe um cnpj válido'))
-    }
     api.get('getByCnpj/' + payload)
       .then(resp => {
         resolve(resp.data)
@@ -35,8 +32,8 @@ export const ActionGetDataByCnpj = ({}, payload) => {
 export const ActionCreateCompany = ({}, payload) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const companies = await api.post('company', payload, getHeaders())
-      resolve(companies.data)
+      const users = await api.post('company', payload, getHeaders())
+      resolve(users.data)
     } catch (error) {
       const data = getError(error)
       reject(data)

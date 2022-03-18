@@ -1,122 +1,169 @@
 <template>
   <div>
-    <q-form>
-      <div class="row">
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.cnpj"
-            mask="##.###.###/####-##"
-            @blur="getByCnpj()"
-            label="CNPJ"
-          />
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.corporate_name"
-            label="Rasão social"
-          />
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.email"
-            label="Email"
-          />
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.fantasy_name"
-            label="Nome Fantasia"
-          />
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.phone_number"
-            mask="(##) # ####-####"
-            label="Telefone"
-          />
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.address.postal_code"
-            mask="##.###-###"
-            label="Cep"
-          />
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.address.number"
-            label="Número"
-          />
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.address.street"
-            label="Logradouro"
-          />
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.address.district"
-            label="Bairro"
-          />
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.address.complement"
-            label="Complemento"
-          />
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.address.city"
-            label="Cidade"
-          />
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
-          <q-input
-            class="j-input full-width"
-            autocomplete="nope"
-            v-model="form.address.uf"
-            label="Estado"
-          />
-        </div>
+    <div class="row">
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.cnpj"
+          mask="##.###.###/####-##"
+          @blur="getByCnpj()"
+          label="CNPJ"
+          :rules="[
+            (val) => (val && val.length > 0) || validatorRequired('cnpj'),
+          ]"
+        />
       </div>
-    </q-form>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.corporate_name"
+          label="Rasão social"
+          :rules="[
+            (val) =>
+              (val && val.length > 0) || validatorRequired('corporate_name'),
+          ]"
+        />
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.email"
+          type="email"
+          label="Email"
+          :rules="[
+            (val) => (val && val.length > 0) || validatorRequired('email'),
+          ]"
+        />
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.fantasy_name"
+          label="Nome Fantasia"
+          :rules="[
+            (val) =>
+              (val && val.length > 0) || validatorRequired('fantasy_name'),
+          ]"
+        />
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.phone_number"
+          mask="(##) # ####-####"
+          label="Telefone"
+          :rules="[
+            (val) =>
+              (val && val.length > 0) || validatorRequired('phone_number'),
+          ]"
+        />
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.address.postal_code"
+          mask="##.###-###"
+          label="Cep"
+          :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              validatorRequired('address.postal_code'),
+          ]"
+        />
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.address.number"
+          label="Número"
+          :rules="[
+            (val) =>
+              (val && val.length > 0) || validatorRequired('address.number'),
+          ]"
+        />
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.address.street"
+          label="Logradouro"
+          :rules="[
+            (val) =>
+              (val && val.length > 0) || validatorRequired('address.street'),
+          ]"
+        />
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.address.district"
+          label="Bairro"
+          :rules="[
+            (val) =>
+              (val && val.length > 0) || validatorRequired('address.district'),
+          ]"
+        />
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.address.complement"
+          label="Complemento"
+          :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              validatorRequired('address.complement'),
+          ]"
+        />
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.address.city"
+          label="Cidade"
+          :rules="[
+            (val) =>
+              (val && val.length > 0) || validatorRequired('address.city'),
+          ]"
+        />
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3 q-pl-sm q-pr-sm">
+        <q-input
+          class="j-input full-width"
+          autocomplete="nope"
+          v-model="form.address.uf"
+          label="Estado"
+          :rules="[
+            (val) => (val && val.length > 0) || validatorRequired('address.uf'),
+          ]"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Company from "src/models/Company";
 import { mapActions } from "vuex";
+import { getMessage } from "src/services/messages/company";
+import { messageError, messageErrorValidator } from "src/services/utils";
 export default {
   name: "SaveCompany",
   props: {
     emitChilds: { default: false },
     action: { required: true, type: String },
   },
-  emits: ["onForm"],
   data() {
     return {
       form: {
@@ -143,10 +190,9 @@ export default {
     getByCnpj() {
       this.ActionGetDataByCnpj(this.form.cnpj)
         .then((resp) => {
-          this.form.corporate_name = resp.nome;
-          this.form.fantasy_name = resp.fantasia;
-          this.form.email = resp.email;
-          this.form.phone_number = resp.telefone;
+          this.form.corporate_name = resp.razao_social;
+          this.form.fantasy_name = resp.nome_fantasia;
+          this.form.phone_number = resp.ddd_telefone_1;
           this.form.address.street = resp.logradouro;
           this.form.address.postal_code = resp.cep;
           this.form.address.district = resp.bairro;
@@ -155,7 +201,9 @@ export default {
           this.form.address.number = resp.numero;
           this.form.address.complement = resp.complemento;
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          return messageErrorValidator(e.message);
+        });
     },
     resetForm() {
       this.form = {
@@ -177,11 +225,17 @@ export default {
         description: null,
       };
     },
+    validatorRequired(field) {
+      return getMessage({ field, type: "required" });
+    },
+    sendForm() {
+      this.$emit("onForm", { ...this.form });
+    },
   },
   watch: {
     emitChilds(val) {
       if (val == true) {
-        this.$emit("onForm", { ...this.form });
+        this.sendForm();
       }
     },
   },

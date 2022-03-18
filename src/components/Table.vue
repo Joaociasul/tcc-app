@@ -43,7 +43,7 @@
             :key="k"
             class="text-rigth"
           >
-            {{ i[j.field] }}
+            {{ getRow(i, j) }}
           </td>
           <td
             v-if="showActions"
@@ -104,6 +104,20 @@ export default {
     },
     rowDblClick(element) {
       this.$emit("onRowDblClick", Object.assign({}, element));
+    },
+    getRow(i, j) {
+      let value = i[j.field];
+      if (j?.field?.indexOf(".") > -1) {
+        let arr = j?.field?.split(".");
+        if (arr.length == 2) {
+          try {
+            return i[arr[0]][arr[1]];
+          } catch (error) {
+            return i[arr[0]];
+          }
+        }
+      }
+      return value;
     },
   },
 };

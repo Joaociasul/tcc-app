@@ -177,7 +177,6 @@ export default {
   },
   watch: {
     product(val) {
-      console.log(val);
       if (!val) return;
       (this.data.cest = val.cest),
         (this.data.cod = val.cod),

@@ -1,8 +1,8 @@
 {
   "name": "tcc-app",
   "version": "0.0.1",
-  "description": "A Quasar Framework app",
-  "productName": "Quasar App",
+  "description": "O seu buscador de preços",
+  "productName": "P-WEB",
   "author": "joaociasul <joaocarlosroyer2018@gmail.com>",
   "private": true,
   "scripts": {

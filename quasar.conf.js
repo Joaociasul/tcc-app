@@ -157,8 +157,8 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `Table Parts`,
-        short_name: `Table Parts`,
+        name: `P-WEB`,
+        short_name: `P-WEB`,
         description: `A Quasar Framework app`,
         display: "standalone",
         orientation: "portrait",

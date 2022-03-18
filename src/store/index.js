@@ -9,6 +9,7 @@ import companies from "./companies";
 
 import products from "./product";
 import paginator from "./paginator";
+import user from "./user"
 
 /**ORM */
 import VuexORM from '@vuex-orm/core'
@@ -23,7 +24,8 @@ export default store(( /* { ssrContext } */ ) => {
       auth: auth,
       companies,
       products,
-      paginator
+      paginator,
+      user
     },
     plugins: [VuexORM.install(database, {
       readonly: false

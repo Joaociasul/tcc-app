@@ -5,7 +5,7 @@
       :fieldOptions="filterOptions"
       @openModalAdd="openModal"
       labelSearch="Pesquisa por nome"
-      title="Empresas"
+      title="Usuários"
       @onSearch="search"
     />
     <Table
@@ -23,7 +23,7 @@
       :title="titleModal"
     >
       <template v-slot:content>
-        <SaveCompany
+        <SaveUser
           @onForm="changeForm"
           v-model:emitChilds="emitChilds"
           v-model:action="actionForm"
@@ -45,7 +45,7 @@ import {
   urlEncode,
 } from "src/services/utils";
 import Modal from "components/Modal.vue";
-import SaveCompany from "components/company/SaveCompany.vue";
+import SaveUser from "components/user/SaveUser.vue";
 import Paginator from "components/Paginator.vue";
 import Company from "src/models/Company";
 import { messageError } from "../../services/utils";
@@ -56,7 +56,7 @@ export default {
     Table,
     Filter,
     Modal,
-    SaveCompany,
+    SaveUser,
     Paginator,
   },
   data() {
@@ -66,39 +66,30 @@ export default {
       filters: {},
       columns: [
         {
-          label: "Rasão Social",
-          field: "corporate_name",
+          label: "Nome",
+          field: "name",
           width: "200",
         },
         {
-          label: "Nome Fantasia",
-          field: "fantasy_name",
+          label: "Email",
+          field: "email",
           width: "150",
         },
         {
-          label: "CNPJ",
-          field: "cnpj",
+          label: "Empresa",
+          field: "company.fantasy_name",
           width: "50",
-        },
-        {
-          label: "Telefone",
-          field: "phone_number",
-          width: "100",
         },
       ],
       rows: [],
       filterOptions: [
         {
           label: "Rasão Social",
-          value: "corporate_name",
+          value: "name",
         },
         {
           label: "Nome Fantasia",
-          value: "fantasy_name",
-        },
-        {
-          label: "CNPJ",
-          value: "cnpj",
+          value: "email",
         },
       ],
       modalOpen: false,
@@ -109,8 +100,8 @@ export default {
     };
   },
   methods: {
-    ...mapActions("companies", [
-      "ActionGetCompanies",
+    ...mapActions("user", [
+      "ActionGetUsers",
       "ActionCreateCompany",
       "ActionGetCompany",
       "ActionSetCompany",
@@ -124,7 +115,7 @@ export default {
         }, 10);
       } else {
         this.$q.loading.hide();
-        let data = await this.ActionGetCompanies(urlEncode(this.filters));
+        let data = await this.ActionGetUsers(urlEncode(this.filters));
         this.rows = data.data;
         this.paginator = data.paginator;
         this.$q.loading.hide();
@@ -144,25 +135,25 @@ export default {
       this.onRequest();
     },
     openModal() {
-      this.titleModal = "Nova Empresa";
+      this.titleModal = "Novo Usuário";
       this.actionForm = "create";
       this.modalOpen = false;
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.modalOpen = true;
-      });
+      }, 1);
     },
     onOkModal() {
       this.modalOpen = true;
       this.emitChilds = false;
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.emitChilds = true;
-      });
+      }, 1);
     },
     onCancelModal() {
       this.modalOpen = true;
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.modalOpen = false;
-      });
+      }, 1);
     },
     onDelete(element) {
       messageConfirm(
@@ -186,9 +177,9 @@ export default {
       this.modalOpen = false;
       const data = await this.ActionGetCompany(element);
       Company.create({ data: { data } });
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.modalOpen = true;
-      });
+      }, 1);
     },
     changeForm(data) {
       this.updateOrCreateCompany(data);
@@ -227,7 +218,7 @@ export default {
       this.onRequest();
     },
     search(search_term) {
-      this.filters["corporate_name"] = search_term;
+      this.filters["name"] = search_term;
       return this.onRequest();
     },
   },

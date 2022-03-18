@@ -120,6 +120,7 @@ export default {
       emitChilds: false,
       paginator: { total: 0 },
       actionForm: "create",
+      dblClick: false,
     };
   },
   methods: {
@@ -169,21 +170,22 @@ export default {
       this.titleModal = "Upload de XML";
       this.actionForm = "create";
       this.modalOpen = false;
-      setTimeout(() => {
+      this.$nextTick(() => {
         this.modalOpen = true;
-      }, 1);
+      });
     },
     onOkModal() {
       this.modalOpen = true;
-      setTimeout(() => {
+      this.$nextTick(() => {
         this.modalOpen = false;
-      }, 1);
+        this.actionForm == "create" && this.onRequest();
+      });
     },
     onCancelModal() {
       this.modalOpen = true;
-      setTimeout(() => {
+      this.$nextTick(() => {
         this.modalOpen = false;
-      }, 1);
+      });
     },
     changeForm(data) {
       this.updateOrCreateCompany(data);
@@ -194,23 +196,26 @@ export default {
     },
     rowClick(i) {
       let showed = this.$q.sessionStorage.getItem("showedMessageInfoRowClick");
-      if (!showed) {
-        this.$q.notify({
-          message: "Clique duas vezes para abrir.",
-          icon: "announcement",
-        });
-      }
-      this.$q.sessionStorage.set("showedMessageInfoRowClick", true);
+      setTimeout(() => {
+        if (!showed || !this.dblClick) {
+          this.$q.notify({
+            message: "Clique duas vezes para abrir.",
+            icon: "announcement",
+          });
+        }
+        this.$q.sessionStorage.set("showedMessageInfoRowClick", true);
+      }, 200);
     },
     openProduct(element) {
+      this.dblClick = true;
       this.fullWidth = true;
       this.ActionGetProduct(element);
       this.titleModal = "Visualizar Produto";
       this.actionForm = "view";
       this.modalOpen = false;
-      setTimeout(() => {
+      this.$nextTick(() => {
         this.modalOpen = true;
-      }, 1);
+      });
     },
     search(search_term) {
       this.filters["ean_cod"] = search_term;
